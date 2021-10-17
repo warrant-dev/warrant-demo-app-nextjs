@@ -1,34 +1,96 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Warrant Demo Application
 
-## Getting Started
+[![Discord](https://img.shields.io/discord/865661082203193365?label=discord)](https://discord.gg/QNCMKWzqET)
 
-First, run the development server:
+## Get Started
 
+### Create Demo App Object Types
 ```bash
-npm run dev
-# or
-yarn dev
+curl "https://api.warrant.dev/v1/object-types" \
+    -X POST \
+    -H "Authorization: ApiKey YOUR_KEY" \
+    --data-raw \
+    '{
+        "type": "group",
+        "relations": {
+            "member": {}
+        }
+    }'
+```
+```bash
+curl "https://api.warrant.dev/v1/object-types" \
+    -X POST \
+    -H "Authorization: ApiKey YOUR_KEY" \
+    --data-raw \
+    '{
+        "type": "store",
+        "relations": {
+            "owner": {},
+            "creator": {},
+            "editor": {
+                "type": "anyOf",
+                "rules": [
+                    {
+                        "type": "userset",
+                        "relation": "owner"
+                    }
+                ]
+            },
+            "viewer": {
+                "type": "anyOf",
+                "rules": [
+                    {
+                        "type": "userset",
+                        "relation": "editor"
+                    }
+                ]
+            }
+        }
+    }'
+```
+```bash
+curl "https://api.warrant.dev/v1/object-types" \
+    -X POST \
+    -H "Authorization: ApiKey YOUR_KEY" \
+    --data-raw \
+    '{
+        "type": "item",
+        "relations": {
+            "parent_store": {},
+            "creator": {},
+            "editor": {
+                "type": "anyOf",
+                "rules": [
+                    {
+                        "type": "objectUserset",
+                        "relation": "parent_store",
+                        "userset": {
+                            "type": "userset",
+                            "relation": "editor"
+                        }
+                    }
+                ]
+            },
+            "viewer": {
+                "type": "anyOf",
+                "rules": [
+                    {
+                        "type": "userset",
+                        "relation": "editor"
+                    }
+                ]
+            }
+        }
+    }'
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Add Your API Key
+Replace occurences of `<replace_with_your_api_key>` in `/utils/auth.ts` and `/data/initialize.js` with your API Key.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+Replace occurence of `<replace_with_your_client_key>` in `_app.jsx` with your Client Key.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### Initialize & Start the App
+```bash
+npm run init # only required the first time you setup the app
+npm run dev
+```
