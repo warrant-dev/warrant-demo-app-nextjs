@@ -14,7 +14,7 @@
     "@warrantdev/warrant-express-middleware": "^0.1.1",
     "@warrantdev/warrant-node": "^0.0.4",
     "cookie": "^0.4.1",
-    "next": "11.1.2",
+    "next": "11.1.4",
     "next-connect": "^0.10.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
